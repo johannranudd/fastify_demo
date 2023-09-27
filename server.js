@@ -1,16 +1,16 @@
-const fastify = require("fastify")({ logger: true });
+import itemRoutes from "./routes/items.js";
+import fastify from "fastify";
 
+const server = fastify({ logger: true });
 const PORT = 5000;
 
-fastify.get("/items", (req, reply) => {
-  reply.send({ test: "ELLO MATE" });
-});
+server.register(itemRoutes);
 
 const start = async () => {
   try {
-    await fastify.listen({ port: PORT });
+    await server.listen({ port: PORT });
   } catch (error) {
-    fastify.log(error);
+    server.log.error(error);
     process.exit(1);
   }
 };
