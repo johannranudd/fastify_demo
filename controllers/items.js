@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { items } from "../items.js";
-// let items = require("../items.js");
 
 export const getAllItemsCtr = (req, reply) => {
-  reply.send(items);
+  const message = items.length === 0 ? "There are no more items" : "";
+  reply.send({ items, message });
 };
 export const getSingleItemCtr = (req, reply) => {
   const { id } = req.params;
@@ -20,5 +20,31 @@ export const postItemCtr = (req, reply) => {
   let newItems = [...items, newItem];
   items.length = 0;
   items.push(...newItems);
-  reply.code(201).send(newItems);
+  reply.code(201).send(items);
+};
+export const deleteItemCtr = (req, reply) => {
+  const { id } = req.params;
+  const filteredItems = items.filter((item) => item.id !== id);
+  items.length = 0;
+  items.push(...filteredItems);
+  reply.send({
+    items,
+    message: `item with id ${id} has been deleted`,
+  });
+};
+export const putItemCtr = (req, reply) => {
+  const { id } = req.params;
+  console.log("IDDDDDD", id);
+  const updatedItems = items.map((item) => {
+    if (item && item.id === id) {
+      return { ...item, name: req.body.name };
+    }
+    return item;
+  });
+  items.length = 0;
+  items.push(...updatedItems);
+  reply.send({
+    items,
+    message: `item with id ${id} has been updated`,
+  });
 };
