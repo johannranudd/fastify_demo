@@ -34,13 +34,10 @@ export const deleteItemCtr = (req, reply) => {
 };
 export const putItemCtr = (req, reply) => {
   const { id } = req.params;
-  console.log("IDDDDDD", id);
-  const updatedItems = items.map((item) => {
-    if (item && item.id === id) {
-      return { ...item, name: req.body.name };
-    }
-    return item;
-  });
+  const updatedItems = items.map((item) =>
+    item.id === id ? { id, name: req.body.name } : item
+  );
+  console.log(updatedItems);
   items.length = 0;
   items.push(...updatedItems);
   reply.send({
